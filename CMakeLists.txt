@@ -67,4 +67,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     # Add user defined libraries
 )
 
-include_directories($ENV{HOME}/Documents/MCUXpresso_SDK/core/CMSIS/Core/Include)
+# include_directories($ENV{HOME}/Documents/MCUXpresso_SDK/core/CMSIS/Core/Include)
+set(XC32_VERSION "vX.XX")
+set(XC32_INCLUDE_DIR "/opt/microchip/xc32/${XC32_VERSION}/pic32c/include/CMSIS/Core/Include")
+include_directories(${XC32_INCLUDE_DIR})
