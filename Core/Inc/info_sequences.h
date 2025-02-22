@@ -1,5 +1,5 @@
-#ifndef info_sequences_h
-#define info_sequences_h
+#ifndef INFO_SEQUENCES_H
+#define INFO_SEQUENCES_H
 
 #include "stm32f4xx_hal.h"
 

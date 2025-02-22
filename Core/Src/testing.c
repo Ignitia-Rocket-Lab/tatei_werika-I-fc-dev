@@ -1,9 +1,32 @@
 #include "testing.h"
 #include "info_sequences.h"
 
+#include "BNO055.h"
+
+#if defined(TEST_TX_GPIO_Port) && defined(TEST_TX_Pin)
+void custom_putchar(int c) {
+  char ch = (char)c;
+  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+}
+
+#undef UNITY_OUTPUT_CHAR
+#define UNITY_OUTPUT_CHAR(a) (void)custom_putchar(a)
+
+void UnityOutputStart(void) {}
+void UnityOutputComplete(void) {}
+
+void setUp(void) {}
+void tearDown(void) {}
+
+#else
+#error                                                                         \
+    "Either TEST_TX_Pin or TEST_TX_GPIO_Port not defined, cannot print test outputs. Probably not compiling in test mode."
+#endif
+
 // Expected acceleration range (BNO055 range: ±16g, assuming raw values)
 #define ACC_MIN_VALUE -16000
 #define ACC_MAX_VALUE 16000
+
 
 /**
  * Testing entry points for main.
@@ -11,8 +34,7 @@
  * are mutually exclusive during execution and thus cannot be tested together.
  */
 
-#ifdef RUN_SUCCESS_TESTS
-int test_success(void) {
+void test_main(void) {
   HAL_Init();
   SystemClock_Config();
   MX_USART2_UART_Init();
@@ -21,31 +43,15 @@ int test_success(void) {
   blink_builtin_LED(LED_BLUE);
 
   UNITY_BEGIN();
+#ifdef RUN_SUCCESS_TESTS
   RUN_TEST(test_bno055_read_acc_x_success);
   RUN_TEST(test_bno055_read_acc_y_success);
   RUN_TEST(test_bno055_read_acc_z_success);
-  return UNITY_END();
-}
-
-int test_failure(void) { return -1; }
-#endif
-
-#ifdef RUN_FAILURE_TESTS
-int test_failure(void) {
-  HAL_Init();
-  SystemClock_Config();
-  MX_USART2_UART_Init();
-  MX_I2C1_Init();
-
-  blink_builtin_LED(LED_GREEN);
-
-  UNITY_BEGIN();
+#elif defined(RUN_FAILURE_TESTS)
   RUN_TEST(test_bno055_read_acc_no_sensor);
-  return UNITY_END();
-}
-
-int test_success(void) { return -1; }
 #endif
+  UNITY_END();
+}
 
 /**
  * Testing BNO055 IMU library.

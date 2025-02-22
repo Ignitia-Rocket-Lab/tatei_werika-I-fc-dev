@@ -25,7 +25,12 @@ void blink_builtin_LED(LED_COLOR color) {
       break;
 
     default:
+      HAL_GPIO_WritePin(BUILTIN_GREEN_LED_GPIO_Port, BUILTIN_GREEN_LED_Pin,
+                        GPIO_PIN_RESET);
+      HAL_GPIO_WritePin(BUILTIN_BLUE_LED_GPIO_Port, BUILTIN_BLUE_LED_Pin,
+                        GPIO_PIN_RESET);
       break;
+
     }
   }
 }
