@@ -102,7 +102,8 @@ int main(void) {
   /* USER CODE BEGIN 2 */
 
 #ifdef TEST
-  test_main();
+  test_success();
+  test_failure();
 #endif
 
   /* USER CODE END 2 */
