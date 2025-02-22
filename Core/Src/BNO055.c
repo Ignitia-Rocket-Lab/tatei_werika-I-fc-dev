@@ -8,7 +8,7 @@ bno055_conf_t default_bno055_config = {
         OPERATION_MODE_NDOF, // Default operation mode (9 Degrees of Freedom)
     .axis_remap_conf = AXIS_REMAP_CONFIG_P0, // Default axis remap configuration
     .axis_remap_sign = AXIS_REMAP_SIGN_P0,   // Default axis remap sign
-    .acc_g_range = ACC_CONFIG_4G,            // Default accelerometer G range
+    .acc_g_range = ACC_CONFIG_16G,            // Default accelerometer G range
     .acc_bandwidth = ACC_CONFIG_62_5Hz,      // Default accelerometer bandwidth
     .acc_operation_mode =
         ACC_CONFIG_NORMAL,             // Default accelerometer operation mode

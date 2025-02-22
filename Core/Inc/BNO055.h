@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define BNO055_FUNC_RETURN uint8_t
-#define ERROR_DEFAULT (uint8_t)(0)
+#define ERROR_DEFAULT (uint8_t)(1)
 
 #define START_BYTE 0xAA
 #define RESPONSE_BYTE 0xBB
