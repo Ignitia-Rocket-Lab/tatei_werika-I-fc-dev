@@ -5,7 +5,6 @@
         "stm32f4xx_hal.h": "c",
         "stm32f4xx_hal_conf.h": "c",
         "bno055.h": "c",
-        "testing.h": "c",
         "unity.h": "c",
         "info_sequences.h": "c",
         "stdint.h": "c"

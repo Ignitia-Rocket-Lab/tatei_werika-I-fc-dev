@@ -46,7 +46,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 )
 
 
-file(GLOB_RECURSE SOURCE_FILES Core/Src/*.cpp Core/Src/*.c)
+file(GLOB_RECURSE SOURCE_FILES Core/Src/*.c)
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
