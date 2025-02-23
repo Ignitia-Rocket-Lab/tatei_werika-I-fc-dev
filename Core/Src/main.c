@@ -27,7 +27,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
-#include "testing.h"
+#include "mini-test.h"
 
 /* USER CODE END Includes */
 
@@ -97,8 +97,9 @@ int main(void)
   MX_I2C1_Init();
   MX_SPI2_Init();
   MX_SPI3_Init();
-  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  TEST_EXPECTED_PASS();
 
   /* USER CODE END 2 */
 
@@ -106,8 +107,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1) {
     /* USER CODE END WHILE */
-
-    test_main();
 
     /* USER CODE BEGIN 3 */
   }
