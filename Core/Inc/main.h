@@ -91,8 +91,6 @@ void Error_Handler(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
-#define TEST_TX_Pin GPIO_PIN_15
-#define TEST_TX_GPIO_Port GPIOA
 #define BAR_MISO_Pin GPIO_PIN_11
 #define BAR_MISO_GPIO_Port GPIOC
 #define BAR_MOSI_Pin GPIO_PIN_12
@@ -103,8 +101,6 @@ void Error_Handler(void);
 #define IMU_RST_GPIO_Port GPIOB
 #define IMU_SCL_Pin GPIO_PIN_6
 #define IMU_SCL_GPIO_Port GPIOB
-#define TEST_RX_Pin GPIO_PIN_7
-#define TEST_RX_GPIO_Port GPIOB
 #define IMU_SDA_Pin GPIO_PIN_9
 #define IMU_SDA_GPIO_Port GPIOB
 
