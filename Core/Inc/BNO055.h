@@ -1,12 +1,14 @@
 #ifndef BNO055_H
 #define BNO055_H
 
+#include <stdio.h>
+
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include <stdio.h>
 
 #define BNO055_FUNC_RETURN uint8_t
 #define ERROR_DEFAULT (uint8_t)(1)
+#define SUCCESS_DEFAULT (uint8_t)(0)
 
 #define START_BYTE 0xAA
 #define RESPONSE_BYTE 0xBB
@@ -395,7 +397,6 @@ typedef enum {
 
   TEMPERATURE_C = 0x00,
   TEMPERATURE_F = 0x10
-
 } bno055_unit_selection_t;
 
 /** Data output selection in fusion data settings --> page 32
@@ -448,7 +449,6 @@ typedef struct {
 
   int16_t acc_radius;
   int16_t mag_radius;
-
 } bno055_offsets_t;
 
 typedef struct {
@@ -509,7 +509,6 @@ typedef struct {
   bno055_mag_operation_mode_config_t mag_op_mode;
   bno055_mag_power_mode_config_t mag_pwr_mode;
   bno055_unit_selection_t unit_sel;
-
 } bno055_conf_t;
 
 typedef struct {
