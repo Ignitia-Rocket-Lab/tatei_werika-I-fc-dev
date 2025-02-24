@@ -8,7 +8,7 @@ bno055_conf_t default_bno055_config = {
         OPERATION_MODE_NDOF, // Default operation mode (9 Degrees of Freedom)
     .axis_remap_conf = AXIS_REMAP_CONFIG_P0, // Default axis remap configuration
     .axis_remap_sign = AXIS_REMAP_SIGN_P0,   // Default axis remap sign
-    .acc_g_range = ACC_CONFIG_16G,            // Default accelerometer G range
+    .acc_g_range = ACC_CONFIG_16G,           // Default accelerometer G range
     .acc_bandwidth = ACC_CONFIG_62_5Hz,      // Default accelerometer bandwidth
     .acc_operation_mode =
         ACC_CONFIG_NORMAL,             // Default accelerometer operation mode
@@ -32,14 +32,17 @@ bno055_verification_t default_bno055_verification = {.chip_id = 0,
 
 void bno055_set_i2c_handler(I2C_HandleTypeDef *hi2c) { i2c_dev = hi2c; }
 
+void bno055_delay(uint32_t ms) { HAL_Delay(ms); }
+
 uint8_t bno055_writeData(uint8_t *txdata) {
   uint8_t status;
   status = HAL_I2C_Master_Transmit(i2c_dev, BNO055_I2C_ADDR_LO << 1, txdata,
                                    sizeof(txdata), 10);
   if (status == HAL_OK) {
-    return 0;
+    return SUCCESS_DEFAULT;
   }
 
+#ifdef TEST
   if (status == HAL_ERROR) {
     printf("HAL_I2C_Master_Transmit HAL_ERROR\r\n");
   } else if (status == HAL_TIMEOUT) {
@@ -52,7 +55,7 @@ uint8_t bno055_writeData(uint8_t *txdata) {
 
   uint32_t error = HAL_I2C_GetError(i2c_dev);
   if (error == HAL_I2C_ERROR_NONE) {
-    return 1;
+    return SUCCESS_DEFAULT;
   } else if (error == HAL_I2C_ERROR_BERR) {
     printf("HAL_I2C_ERROR_BERR\r\n");
   } else if (error == HAL_I2C_ERROR_ARLO) {
@@ -87,8 +90,9 @@ uint8_t bno055_writeData(uint8_t *txdata) {
   } else if (state == HAL_I2C_STATE_ABORT) {
     printf("HAL_I2C_STATE_ABORT\r\n");
   }
+#endif
 
-  return 1;
+  return ERROR_DEFAULT;
 }
 
 uint8_t bno055_readData(uint8_t reg, uint8_t *data, uint8_t len) {
@@ -96,20 +100,19 @@ uint8_t bno055_readData(uint8_t reg, uint8_t *data, uint8_t len) {
   status =
       HAL_I2C_Master_Transmit(i2c_dev, BNO055_I2C_ADDR_LO << 1, &reg, 1, 10);
   if (status != HAL_OK) {
-    return 1;
+    return ERROR_DEFAULT;
   }
+
   bno055_delay(10);
   status =
       HAL_I2C_Master_Receive(i2c_dev, BNO055_I2C_ADDR_LO << 1, data, len, 10);
   bno055_delay(10);
-  if (status == HAL_OK) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
 
-void bno055_delay(uint32_t ms) { HAL_Delay(ms); }
+  if (status == HAL_OK) {
+    return SUCCESS_DEFAULT;
+  }
+  return ERROR_DEFAULT;
+}
 
 BNO055_FUNC_RETURN bno055_init(bno055_conf_t *bno055_conf,
                                bno055_verification_t *bno055_verification) {
@@ -219,6 +222,7 @@ BNO055_FUNC_RETURN bno055_read_acc_x(uint16_t *acc_x) {
   *acc_x = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_acc_y(uint16_t *acc_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -226,6 +230,7 @@ BNO055_FUNC_RETURN bno055_read_acc_y(uint16_t *acc_y) {
   *acc_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_acc_z(uint16_t *acc_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -233,6 +238,7 @@ BNO055_FUNC_RETURN bno055_read_acc_z(uint16_t *acc_z) {
   *acc_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_acc_xyz(bno055_acc_t *acc_xyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[6] = {0, 0, 0, 0, 0, 0};
@@ -257,6 +263,7 @@ BNO055_FUNC_RETURN bno055_read_mag_x(uint16_t *mag_x) {
   *mag_x = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_mag_y(uint16_t *mag_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -264,6 +271,7 @@ BNO055_FUNC_RETURN bno055_read_mag_y(uint16_t *mag_y) {
   *mag_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_mag_z(uint16_t *mag_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -271,6 +279,7 @@ BNO055_FUNC_RETURN bno055_read_mag_z(uint16_t *mag_z) {
   *mag_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_mag_xyz(bno055_mag_t *mag_xyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[6] = {0, 0, 0, 0, 0, 0};
@@ -288,6 +297,7 @@ BNO055_FUNC_RETURN bno055_read_gyr_x(uint16_t *gyr_x) {
   *gyr_x += (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gyr_y(uint16_t *gyr_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -295,6 +305,7 @@ BNO055_FUNC_RETURN bno055_read_gyr_y(uint16_t *gyr_y) {
   *gyr_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gyr_z(uint16_t *gyr_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -302,6 +313,7 @@ BNO055_FUNC_RETURN bno055_read_gyr_z(uint16_t *gyr_z) {
   *gyr_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gyr_xyz(bno055_gyr_t *gyr_xyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[6] = {0, 0, 0, 0, 0, 0};
@@ -319,6 +331,7 @@ BNO055_FUNC_RETURN bno055_read_euler_h(uint16_t *euler_h) {
   *euler_h = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_euler_r(uint16_t *euler_r) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -326,6 +339,7 @@ BNO055_FUNC_RETURN bno055_read_euler_r(uint16_t *euler_r) {
   *euler_r = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_euler_p(uint16_t *euler_p) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -333,6 +347,7 @@ BNO055_FUNC_RETURN bno055_read_euler_p(uint16_t *euler_p) {
   *euler_p = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_euler_hrp(bno055_euler_t *euler_hrp) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[6] = {0, 0, 0, 0, 0, 0};
@@ -356,6 +371,7 @@ BNO055_FUNC_RETURN bno055_read_quaternion_w(uint16_t *quaternion_w) {
   *quaternion_w = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_quaternion_x(uint16_t *quaternion_x) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -363,6 +379,7 @@ BNO055_FUNC_RETURN bno055_read_quaternion_x(uint16_t *quaternion_x) {
   *quaternion_x = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_quaternion_y(uint16_t *quaternion_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -370,6 +387,7 @@ BNO055_FUNC_RETURN bno055_read_quaternion_y(uint16_t *quaternion_y) {
   *quaternion_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_quaternion_z(uint16_t *quaternion_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -377,6 +395,7 @@ BNO055_FUNC_RETURN bno055_read_quaternion_z(uint16_t *quaternion_z) {
   *quaternion_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN
 bno055_read_quaternion_wxyz(bno055_quaternion_t *quaternion_wxyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
@@ -396,6 +415,7 @@ BNO055_FUNC_RETURN bno055_read_linear_acc_x(uint16_t *linear_acc_x) {
   *linear_acc_x = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_linear_acc_y(uint16_t *linear_acc_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -403,6 +423,7 @@ BNO055_FUNC_RETURN bno055_read_linear_acc_y(uint16_t *linear_acc_y) {
   *linear_acc_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_linear_acc_z(uint16_t *linear_acc_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -410,6 +431,7 @@ BNO055_FUNC_RETURN bno055_read_linear_acc_z(uint16_t *linear_acc_z) {
   *linear_acc_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN
 bno055_read_linear_acc_xyz(bno055_linear_acc_t *linear_acc_xyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
@@ -428,6 +450,7 @@ BNO055_FUNC_RETURN bno055_read_gravity_x(uint16_t *gravity_x) {
   *gravity_x = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gravity_y(uint16_t *gravity_y) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -435,6 +458,7 @@ BNO055_FUNC_RETURN bno055_read_gravity_y(uint16_t *gravity_y) {
   *gravity_y = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gravity_z(uint16_t *gravity_z) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[2] = {0, 0};
@@ -442,6 +466,7 @@ BNO055_FUNC_RETURN bno055_read_gravity_z(uint16_t *gravity_z) {
   *gravity_z = (uint16_t)((data[1] << 8) | (data[0]));
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_read_gravity_xyz(bno055_gravity_t *gravity_xyz) {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
   uint8_t data[6] = {0, 0, 0, 0, 0, 0};
@@ -462,19 +487,24 @@ BNO055_FUNC_RETURN bno055_read_temperature(int8_t *temp) {
 
 BNO055_FUNC_RETURN bno055_get_acc_calib_status() {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
+  // TODO complete logic
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_get_mag_calib_status() {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
+  // TODO complete logic
   return ret;
 }
+
 BNO055_FUNC_RETURN bno055_get_gyr_calib_status() {
   BNO055_FUNC_RETURN ret = ERROR_DEFAULT;
+  // TODO complete logic
   return ret;
 }
 
 /**
- * Get the correct chip id
+ Get the correct chip id
  * Make sure on every function to have the right page
  * Get calibration
  * Set the units on the Init

@@ -77,6 +77,8 @@ void Error_Handler(void);
 #define BAR_SCK_GPIO_Port GPIOB
 #define BAR_CS_Pin GPIO_PIN_13
 #define BAR_CS_GPIO_Port GPIOB
+#define BUZZER_Pin GPIO_PIN_6
+#define BUZZER_GPIO_Port GPIOC
 #define PYRO1_Pin GPIO_PIN_8
 #define PYRO1_GPIO_Port GPIOC
 #define PYRO0_Pin GPIO_PIN_9
