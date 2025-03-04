@@ -804,6 +804,8 @@ bool BNO055_isFullyCalibrated() {
   default:
     return (system == 3 && gyro == 3 && accel == 3 && mag == 3);
   }
+
+  return false; // For any missing mode check return
 }
 
 /*!
