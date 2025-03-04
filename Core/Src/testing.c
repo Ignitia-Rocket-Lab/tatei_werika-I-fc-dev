@@ -15,16 +15,26 @@ void TEST_bno055_get_event_vect_euler(void);
 void TEST_bno055_get_event_vect_linear_acc(void);
 
 /**
+ * Testing MS5607 BAR library.
+ */
+
+void TEST_ms5607_update(void);
+
+void TEST_ms5607_get_pressure_pa(void);
+
+/**
  * Register ALL tests to be run.
  */
 void REGISTER_TESTS_PASS(void) {
   // Register tests that are expected to pass
 
   TEST_bno055_get_generic_event_pass();
-
   TEST_bno055_get_event_vect_gyro();
   TEST_bno055_get_event_vect_euler();
   TEST_bno055_get_event_vect_linear_acc();
+
+  TEST_ms5607_update();
+  TEST_ms5607_get_pressure_pa();
 }
 
 void REGISTER_TESTS_FAIL(void) {
