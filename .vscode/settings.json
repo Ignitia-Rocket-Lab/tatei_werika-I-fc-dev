@@ -21,6 +21,7 @@
         "ranges": "cpp",
         "cstddef": "cpp",
         "matrix.h": "c",
-        "quaternion.h": "c"
+        "quaternion.h": "c",
+        "spi.h": "c"
     }
 }
