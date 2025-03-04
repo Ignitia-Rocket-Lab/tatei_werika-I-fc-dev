@@ -263,7 +263,7 @@ void BNO055_init(int32_t sensorID, uint8_t address, I2C_HandleTypeDef *i2c_dev);
 
 bool BNO055_begin(adafruit_bno055_opmode_t mode);
 void BNO055_setMode(adafruit_bno055_opmode_t mode);
-adafruit_bno055_opmode_t getMode();
+adafruit_bno055_opmode_t BNO055_getMode();
 void BNO055_setAxisRemap(adafruit_bno055_axis_remap_config_t remapcode);
 void BNO055_setAxisSign(adafruit_bno055_axis_remap_sign_t remapsign);
 void BNO055_getRevInfo(adafruit_bno055_rev_info_t *);
